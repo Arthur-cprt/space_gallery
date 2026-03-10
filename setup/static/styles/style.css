@@ -33,7 +33,9 @@ body {
     line-height: 1;
     font-family: 'Space Grotesk', sans-serif;
     min-height: 100vh;
-    background: linear-gradient(#041833,#04244F,#154580);
+    /*background-color: linear-gradient(#041833,#04244F,#154580);*/
+    background-color: #041833;
+    background-image: url('/static/assets/imagens/space-gallery-bg.png');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -89,7 +91,14 @@ table {
     height: auto;
     justify-content: space-between;
     padding: 2px;
-    width: auto; 
+    width: 30%;
+    max-width: 90%;
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.cabecalho__busca:focus-within {
+    box-shadow: 0 0 0 3px rgba(123, 120, 229, 0.35), 0 0 22px rgba(201, 140, 241, 0.55);
+    transform: translateY(-1px);
 }
 
 .busca__fundo {
@@ -108,13 +117,43 @@ table {
     font-size: 1rem;
     height: 24px;
     padding: 10px;
-    width: 500px;
+    flex: 1;
+    min-width: 0; 
+}
+
+.busca__input:focus,
+.busca__input:focus-visible {
+    outline: none;
+    box-shadow: none;
+}
+
+
+.cabecalho__busca form {
+    display: flex;
+    align-items: center;
+    width: 100%;
 }
 
 .busca__icone {
     cursor: pointer;
     width: 2rem;
     height: 2rem;
+
+}
+
+.cabecalho__busca form button {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.cabecalho__busca form button:focus {
+    outline: none;
 }
 
 .cards {
@@ -129,23 +168,31 @@ table {
 }
 
 .cards__lista{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-content: space-between;
+    column-count: 2;
+    column-gap: 2.5rem;
 }
 
 .card {
     border-radius: 10px;
     box-shadow: 0px 10px 10px #00000050;
     color: #FFFFFF;
-    margin-bottom: 1.5rem;
+    margin: 0 0 1.5rem;
     position: relative;
-    width: 450px;
+    width: 100%;
+    display: inline-block;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0px 20px 20px #00000060;
 }
 
 .card__imagem {
-    width: 450px;
+    width: 100%;
+    display: block;
     border-radius: 10px 10px 0 0;
 }
 
@@ -154,13 +201,30 @@ table {
     border-radius: 8px;
     border: 2px solid transparent;
     font-size: 1.2rem;
-    left: 310px;
-    margin-right: 1.5rem;
+    left: auto;
+    right: 0.1rem;
+    margin-right: 1.0rem;
     padding: .5rem .5rem;
     position: absolute;
     text-align: center;
     top: 20px;
     width: 100px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+}
+
+.card:hover .card__tag {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+@media (max-width: 1100px) {
+    .cards__lista {
+        column-count: 1;
+    }
 }
 
 .card__info {
@@ -228,16 +292,13 @@ table {
     justify-content: space-between;
     color: #FFFFFF;
     margin-top: 0.5rem;
+    font-size: 1rem;
 }
 
 .imagem__titulo {
     font-weight: bold;
     line-height: 2rem;
     color: #FFFFFF;
-}
-
-.imagem__texto {
-    font-size: 1rem;
 }
 
 .imagem__descricao {
@@ -263,15 +324,36 @@ table {
     text-decoration: none;
     color: #D9D9D9;
     font-size: 24px;
+    border-radius: 10px;
+    padding: 10px 14px;
+    transition: color 0.3s ease, text-shadow 0.3s ease, background 0.3s ease;
 }
 
-.menu-lateral__navegacao a:first-child {
+.menu-lateral__navegacao a:hover {
+    color: #ffffff;
+    text-shadow:
+        0 0 8px #7B78E5,
+        0 0 20px #7B78E5,
+        0 0 40px #C98CF1;
+}
+
+.menu-lateral__navegacao a.active {
     font-weight: bold;
     color: #7B78E5;
+    text-shadow:
+        0 0 4px rgba(123, 120, 229, 0.55),
+        0 0 10px rgba(123, 120, 229, 0.35);
 }
 
 .menu-lateral__navegacao img {
     margin-right: 1.5rem;
+    filter: drop-shadow(0 0 4px rgba(123, 120, 229, 0.5));
+    transition: filter 0.3s ease;
+}
+
+.menu-lateral__navegacao a:hover img,
+.menu-lateral__navegacao a.active img {
+    filter: drop-shadow(0 0 8px #7B78E5);
 }
 
 .pagina-inicial {
@@ -338,7 +420,7 @@ table {
     padding: 1.5rem 3rem;
     box-sizing: border-box;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     color: #FFFFFF;
 }
 
@@ -369,19 +451,86 @@ table {
 }
 
 .tags__tag {
-    background-color: #D9D9D930;
-    margin-right: 1.5rem;
-    border-radius: 8px;
-    padding: .8rem .5rem;
-    width: 100px;
+    border-radius: 50px;
+    padding: 2px;
+    margin-right: 4.5rem;
+    width: 140px;
+    height: 44px;
     text-align: center;
-    border: 2px solid transparent;
+    border: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.tags__tag:hover {
-    border: 2px solid #7B78E5;
-    cursor: pointer;
+.tags__tag a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 100%;
+    padding: 0;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: filter 0.25s ease;
 }
+
+.tags__tag--nebulosa {
+    background: linear-gradient(135deg, #2a0845, #6a0dad);
+    box-shadow: 0 0 8px rgba(180, 79, 255, 0.3);
+}
+.tags__tag--nebulosa a { color: #c97fff; }
+.tags__tag--nebulosa:hover,
+.tags__tag--nebulosa.selected {
+    background: linear-gradient(135deg, #6a0dad, #b44fff);
+    box-shadow: 0 0 20px rgba(180, 79, 255, 0.6);
+    transform: scale(1.06);
+}
+.tags__tag--nebulosa.selected a,
+.tags__tag--nebulosa:hover a { color: #fff; }
+
+.tags__tag--estrela {
+    background: linear-gradient(135deg, #2a1f00, #7a5a00);
+    box-shadow: 0 0 8px rgba(255, 220, 80, 0.3);
+}
+.tags__tag--estrela a { color: #ffe066; }
+.tags__tag--estrela:hover,
+.tags__tag--estrela.selected {
+    background: linear-gradient(135deg, #7a5a00, #ffe066);
+    box-shadow: 0 0 20px rgba(255, 220, 80, 0.6);
+    transform: scale(1.06);
+}
+.tags__tag--estrela.selected a,
+.tags__tag--estrela:hover a { color: #1a1000; }
+
+.tags__tag--galaxia {
+    background: linear-gradient(135deg, #001a2e, #003d6b);
+    box-shadow: 0 0 8px rgba(79, 195, 247, 0.3);
+}
+.tags__tag--galaxia a { color: #4fc3f7; }
+.tags__tag--galaxia:hover,
+.tags__tag--galaxia.selected {
+    background: linear-gradient(135deg, #003d6b, #4fc3f7);
+    box-shadow: 0 0 20px rgba(79, 195, 247, 0.6);
+    transform: scale(1.06);
+}
+.tags__tag--galaxia.selected a,
+.tags__tag--galaxia:hover a { color: #001a2e; }
+
+.tags__tag--planeta {
+    background: linear-gradient(135deg, #002210, #005522);
+    box-shadow: 0 0 8px rgba(105, 255, 133, 0.3);
+}
+.tags__tag--planeta a { color: #69ff85; }
+.tags__tag--planeta:hover,
+.tags__tag--planeta.selected {
+    background: linear-gradient(135deg, #005522, #69ff85);
+    box-shadow: 0 0 20px rgba(105, 255, 133, 0.6);
+    transform: scale(1.06);
+}
+.tags__tag--planeta.selected a,
+.tags__tag--planeta:hover a { color: #001a08; }
 
 .alert {
     --bs-alert-bg: transparent;
